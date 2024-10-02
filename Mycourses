@@ -1,0 +1,45 @@
+const courses = [
+  { id: 1, title: "Physics", description: "Learn mechanics, thermodynamics, and more", image: "/placeholder.svg?height=100&width=100" },
+  { id: 2, title: "Chemistry", description: "Explore atoms, molecules, and reactions", image: "/placeholder.svg?height=100&width=100" },
+  { id: 3, title: "Mathematics", description: "Master algebra, calculus, and statistics", image: "/placeholder.svg?height=100&width=100" },
+  { id: 4, title: "Biology", description: "Understand life, from cells to ecosystems", image: "/placeholder.svg?height=100&width=100" },
+  { id: 5, title: "Computer Science", description: "Learn programming and algorithms", image: "/placeholder.svg?height=100&width=100" },
+  { id: 6, title: "English", description: "Improve your language and literature skills", image: "/placeholder.svg?height=100&width=100" },
+];
+
+function MyCourses() {
+  return (
+    <div className="min-h-screen bg-gray-100">
+      <header className="bg-black text-white py-4">
+        <div className="container mx-auto px-4">
+          <h1 className="text-2xl font-bold">My Courses</h1>
+        </div>
+      </header>
+      <main className="container mx-auto px-4 py-8">
+        <div className="mb-6">
+          <input
+            type="text"
+            placeholder="Search courses..."
+            className="w-full p-2 border rounded"
+          />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {courses.map(course => (
+            <div key={course.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+              <img src={course.image} alt={course.title} className="w-full h-40 object-cover" />
+              <div className="p-4">
+                <h2 className="text-xl font-semibold mb-2 text-violet-600">{course.title}</h2>
+                <p className="text-gray-600 mb-4">{course.description}</p>
+                <button className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800">
+                  Let's Study
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+export default MyCourses;
