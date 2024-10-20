@@ -7,16 +7,16 @@ import { Label } from "@/components/ui/label"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
-export default function EditStudentProfile() {
+export default function EditStudentProfile({params}) {
   const [formData, setFormData] = useState({
-    name: "Jane Smith",
-    email: "jane.smith@university.edu",
-    phone: "(987) 654-3210",
-    location: "Boston, MA",
-    major: "Computer Science",
-    expectedGraduation: "May 2024"
+    name: "",
+    email: "",
+    phone: "",
+    location: "",
+    major: "",
+    expectedGraduation: ""
   })
-
+console.log(params.id)
   const handleInputChange = (e) => {
     const { name, value } = e.target
     setFormData(prevData => ({
@@ -40,7 +40,8 @@ export default function EditStudentProfile() {
   }
 
   return (
-    <Card className="w-full">
+    <div className='flex justify-center  min-h-screen'>
+    <Card className="w-full m-4">
       <CardHeader>
         <CardTitle>Edit Profile</CardTitle>
         <CardDescription>Update your personal information</CardDescription>
@@ -132,5 +133,6 @@ export default function EditStudentProfile() {
         </CardFooter>
       </form>
     </Card>
+    </div>
   )
 }

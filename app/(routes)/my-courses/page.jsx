@@ -16,94 +16,35 @@ import Script from 'next/script';
 import { useAuth } from '@/context/authContext';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
-export default function CoursesPage() {
+export default function MyCoursesPage() {
   const router=useRouter();
   const {token,authUser}=useAuth();
+  console.log(authUser)
   const [filteredCourses, setFilteredCourses] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
+  const [subscribedCourses,setSubscribedCourses]=useState([])
   const [isLoading, setIsLoading] = useState(false); // Added state for loading
 
   const handleAddCourse = async (course) => {
-    try {
-      // Start by creating an order in the backend
-      const response = await fetch(`http://localhost:5001/api/course/checkout/${course._id}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'token': token, // Send the token in the Authorization header
-        },
-        body: JSON.stringify({ amount: course.price * 100, currency: 'INR' }) // Price multiplied by 100 for paise
-      });
-  
-      const order = await response.json();
-      
-      if (response.ok) {
-        // Set up Razorpay options
-        const options = {
-          key: 'rzp_test_Fzm5ISnr4kvP9A', // Replace with your Razorpay key
-          amount: order.order.amount, // Amount in subunits (paise)
-          currency: 'INR',
-          name: 'LearnLink',
-          description: 'Connect and learn with everyone',
-          order_id: order.order.id, // This is the order_id created by Razorpay in the backend
-          handler: async function (response) {
-            const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = response;
-            try {
-              // Call the payment verification API
-              const verificationResponse = await fetch(`http://localhost:5001/api/verfication/${course._id}`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'token': token,
-                },
-                body: JSON.stringify({
-                  razorpay_order_id,
-                  razorpay_payment_id,
-                  razorpay_signature
-                })
-              });
-  
-              const verificationData = await verificationResponse.json();
-  
-              if (verificationResponse.ok) {
-                toast.success(verificationData.message); // Show success message
-                router.push('/payment-success'); // Navigate to the success page
-              } else {
-                toast.error(verificationData.message); // Show failure message
-              }
-  
-            } catch (error) {
-              toast.error(`Payment verification failed: ${error.message}`);
-            }
-          },
-          theme: {
-            color: "black"
-          }
-        };
-  
-        // Initialize Razorpay checkout
-        const razorpay = new window.Razorpay(options);
-        razorpay.open();
-  
-      } else {
-        toast.error(order.message || 'Failed to create order');
-      }
-    } catch (error) {
-      toast.error(`Checkout failed: ${error.message}`);
-    }
+    router.push(`my-courses/lectures/${course._id}`)
+
   };
   
 
   const fetchCourses = async () => {
     setIsLoading(true); // Set loading state to true before fetching
     try {
-      const response = await fetch(`http://localhost:5001/api/course/?name=${searchTerm}&category=${selectedCategory}`);
-      const data = await response.json();
-      console.log(data)
-      if (data && data.courses) {
-        setFilteredCourses(data.courses); // Assuming the courses are nested under 'courses' in the response
-      }
+      const response = await fetch(`http://localhost:5001/api/mycourse`,{
+        method: 'GET',
+        headers:{
+          'token': token
+        }
+      });
+      const data = await response.json();   
+      console.log('data for courses',data.myCourse)
+      setFilteredCourses(data.myCourse); // Assuming the courses are nested under 'courses' in the response
+    
     } catch (error) {
       console.log('Error fetching courses', error.message);
     } finally {
@@ -117,8 +58,8 @@ export default function CoursesPage() {
 
   return (
     <div className="container mx-auto py-8 min-h-screen">
-      <Script type='text/javascript' src='https://checkout.razorpay.com/v1/checkout.js'/>
-      <h1 className="text-3xl font-bold mb-8">Explore Courses</h1>
+      {/* <Script type='text/javascript' src='https://checkout.razorpay.com/v1/checkout.js'/> */}
+      <h1 className="text-3xl font-bold mb-8">Your Courses</h1>
       <div className="flex w-full max-w-sm justify-end items-center my-4 gap-4">
         <Input 
           type="text" 
@@ -169,13 +110,16 @@ export default function CoursesPage() {
                 <span className='flex justify-start items-center text-green-400 font-bold gap-1'><MdTimelapse />{course.duration}min</span>
                 <p className="font-semibold flex gap-1 text-green-400 items-center">{course.lectures.length}<MdVideoCameraFront size={20}/> Lectures</p> {/* Added lectures count */}
                 </div>
-                <div className="flex justify-between items-center text-lg bg-green-600 text-green-200 rounded-full w-full font-bold px-3 my-2">
+                {/* <div className="flex justify-between items-center text-lg bg-green-600 text-green-200 rounded-full w-full font-bold px-3 my-2">
                   ${course.price.toFixed(2)}
                   <div className='flex items-center gap-1'><MdStars /> 4</div>
-                  
 
-                </div>
-                <Modal
+                </div> */}
+                  <Button onClick={() => handleAddCourse(course)} className="mt-4 bg">
+                        Let{'`'}s Study
+                      </Button>
+
+                {/* <Modal
                   trigger={<Button variant="outline" className=" w-full mb-2">View Details</Button>}
                   title={course.name}
                   description={course.description}
@@ -210,18 +154,15 @@ export default function CoursesPage() {
                           <hr />
                         </li>
                           </ul>
-                          {/* <div key={index} className="mt-2">
-                            <span className="font-semibold">{index + 1}. </span>
-                          </div> */}
                           </>
                         ))}
                       </div>
                       <Button onClick={() => handleAddCourse(course)} className="mt-4">
-                        Buy Course
+                        Let{'`'}s Study
                       </Button>
                     </div>
                   }
-                />
+                /> */}
                 </div>
                 </div>
               </CardContent>

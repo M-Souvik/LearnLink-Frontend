@@ -2,7 +2,7 @@ import React from 'react'
 
 const StudyMaterial = () => {
   return (
-    <div>StudyMaterial</div>
+    <div className='min-h-screen'>StudyMaterial</div>
   )
 }
 

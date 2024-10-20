@@ -1,0 +1,138 @@
+/* Container styles */
+.sign-in-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+
+  }
+  
+  .form-container {
+    display: flex;
+    width: 100%;
+    border-width: 1px ;
+    
+    max-width: 640px;
+    margin: auto;
+    /* background-color: #fff; */
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Image section */
+  .form-image {
+    
+    background: url('/assets/Login.png');
+    background-size: cover;
+    width: 50%;
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+   
+  }
+  
+  /* Form content */
+  .form-content {
+    width: 100%;
+    padding: 20px;
+    background: transparent;
+  }
+  
+  .logo-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .logo {
+    height: 5rem;
+  }
+  
+  .welcome-text {
+    margin-top: 1rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .form-group {
+    margin-top: 1rem;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: medium;
+    color: white;
+  }
+  
+  input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #D1D5DB;
+    border-radius: 0.375rem;
+    color: #374151;
+  }
+  
+  input:focus {
+    border-color: #3B82F6;
+    outline: none;
+  }
+  
+  /* Password and Forgot Password */
+  .password-label {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .forgot-password {
+    font-size: 0.75rem;
+    color: #6B7280;
+    text-decoration: underline;
+  }
+  
+  .forgot-password:hover {
+    color: #3B82F6;
+  }
+  
+  /* Select Role */
+  .select-role {
+    background: #111315;
+    border: 1px solid #D1D5DB;
+  }
+  
+  /* Submit button */
+  .submit-button-container {
+    margin-top: 1.5rem;
+  }
+  
+  .submit-button {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #1D4ED8;
+    color: #fff;
+    font-weight: medium;
+    border-radius: 0.375rem;
+    text-align: center;
+    cursor: pointer;
+  }
+  
+  .submit-button:hover {
+    background-color: #2563EB;
+  }
+  
+  /* Sign-up text */
+  .sign-up-text {
+    margin-top: 1rem;
+    text-align: center;
+  }
+  
+  .sign-up-link {
+    color: #3B82F6;
+    font-weight: medium;
+  }
+  
+  .sign-up-link:hover {
+    text-decoration: underline;
+  }
+  
