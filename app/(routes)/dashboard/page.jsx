@@ -1,11 +1,5 @@
-'use client'
-
 import React from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { BookOpen, BarChart, Users, Award } from 'lucide-react'
+import '@/styles/dashboard.css'; // Import the CSS file
 
 // Mock data for courses
 const courses = [
@@ -17,72 +11,71 @@ const courses = [
 
 export default function Dashboard() {
   return (
-    <div className="p-8 dark:bg-gray-900 min-h-screen">
-      {/* <h1 className="text-4xl font-bold mb-8 text-gray-100">Dashboard</h1> */}
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-gray-100">Total Courses</CardTitle>
-            <BookOpen className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{courses.length}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Average Progress</CardTitle>
-            <BarChart className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
+    <div className="dashboard">
+      <div className="card-container">
+        <div className="card">
+          <div className="card-header">
+            <span className="card-title">Total Courses</span>
+            <i className="icon book"></i>
+          </div>
+          <div className="card-content">
+            <div className="number">{courses.length}</div>
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="card-header">
+            <span className="card-title">Average Progress</span>
+            <i className="icon chart"></i>
+          </div>
+          <div className="card-content">
+            <div className="number">
               {Math.round(courses.reduce((acc, course) => acc + course.progress, 0) / courses.length)}%
             </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Lessons</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="card-header">
+            <span className="card-title">Total Lessons</span>
+            <i className="icon users"></i>
+          </div>
+          <div className="card-content">
+            <div className="number">
               {courses.reduce((acc, course) => acc + course.totalLessons, 0)}
             </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Completed Lessons</CardTitle>
-            <Award className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="card-header">
+            <span className="card-title">Completed Lessons</span>
+            <i className="icon award"></i>
+          </div>
+          <div className="card-content">
+            <div className="number">
               {courses.reduce((acc, course) => acc + course.completedLessons, 0)}
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
 
-      <h2 className="text-2xl font-semibold mb-4 text-gray-100">Your Courses</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <h2 className="section-title">Your Courses</h2>
+      <div className="courses-grid">
         {courses.map((course) => (
-          <Card key={course.id}>
-            <CardHeader>
-              <CardTitle>{course.name}</CardTitle>
-              <CardDescription>
-                {course.completedLessons} of {course.totalLessons} lessons completed
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-center justify-between mb-2">
-                <Progress value={course.progress} className="w-4/5" />
-                <Badge variant="secondary">{course.progress}%</Badge>
+          <div className="course-card" key={course.id}>
+            <div className="course-header">
+              <h3>{course.name}</h3>
+              <p>{course.completedLessons} of {course.totalLessons} lessons completed</p>
+            </div>
+            <div className="course-content">
+              <div className="progress-bar-container">
+                <div className="progress-bar" style={{ width: `${course.progress}%` }}></div>
+                <span className="badge">{course.progress}%</span>
               </div>
-              <Button className="w-full mt-4">Continue Learning</Button>
-            </CardContent>
-          </Card>
+              <button className="btn">Continue Learning</button>
+            </div>
+          </div>
         ))}
       </div>
     </div>

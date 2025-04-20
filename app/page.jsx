@@ -1,9 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { PiGearFineBold } from "react-icons/pi";
 import { MdStart } from "react-icons/md";
@@ -17,7 +14,7 @@ export default function Home() {
       <div className="background-image"></div>
       <div className="overlay">
         <div className="content-container">
-          {/* <Image src="/assets/BrainWave-logo.png" width={500} height={500} alt="BrainWave Logo" /> */}
+
 
           <div className="text-container">
             <h1 className="heading">

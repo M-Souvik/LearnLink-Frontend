@@ -5,35 +5,54 @@ import { useRouter } from 'next/navigation';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(null);
-  const [authUser, setAuthUser] = useState(null);
+  const [token, setToken] = useState("");
+  const [authUser, setAuthUser] = useState("");
   const router = useRouter();
 
   useEffect(() => {
-    // Check if the authentication token exists in the cookie
-    const storedToken = getCookie("token");
-    const storedAuthUser = getCookie("authUser");
-
-    if (storedToken && storedAuthUser) {
-      setToken(storedToken);
-      setAuthUser(JSON.parse(storedAuthUser));
+    if(typeof window !== "undefined") {
+      try {
+        // Get token and user from sessionStorage safely
+    
+        const storedToken = sessionStorage.getItem("token");
+        const storedAuthUser = sessionStorage.getItem("authUser");
+  
+        if (storedToken) {
+          setToken(storedToken);
+        }
+        
+        if (storedAuthUser) {
+          setAuthUser(JSON.parse(storedAuthUser));
+        }
+      } catch (error) {
+        console.error("Failed to load token or user from storage:", error);
+      }
     }
+   
   }, []);
 
   const login = (value) => {
+    const user = value.user || value;
     setToken(value.token);
-    setAuthUser(value.user || value); // Adjust based on your API response structure
+    setAuthUser(user);
 
-    setCookie("authUser", JSON.stringify(value.user || value));
+    // Store in sessionStorage and cookies
+    if(typeof window !== "undefined") {
+    sessionStorage.setItem("authUser", JSON.stringify(user));
+    sessionStorage.setItem("token", value.token);
+    }
+    setCookie("authUser", JSON.stringify(user));
     setCookie("token", value.token);
   };
 
   const logout = () => {
     setToken(null);
     setAuthUser(null);
+
+    // Clear storage and cookies
     removeCookie("token");
     removeCookie("authUser");
-    localStorage.clear();
+    sessionStorage.clear();
     router.push("/");
   };
 
@@ -49,4 +68,6 @@ export const AuthProvider = ({ children }) => {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = () => {
+  return useContext(AuthContext);
+};

@@ -2,14 +2,13 @@
 
 import React, { useEffect, useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Modal } from '@/components/modal';
 import { Input } from '@/components/ui/input';
 import Image from 'next/image';
 import { BsFilterCircle } from "react-icons/bs";
 import Dropdown from '@/components/dropdown';
 import { MdTimelapse } from "react-icons/md";
-import { Star } from 'lucide-react';
 import { MdStars } from "react-icons/md";
 import { MdVideoCameraFront } from "react-icons/md";
 import Script from 'next/script';
@@ -27,7 +26,7 @@ export default function CoursesPage() {
   const handleAddCourse = async (course) => {
     try {
       // Start by creating an order in the backend
-      const response = await fetch(`http://localhost:5001/api/course/checkout/${course._id}`, {
+      const response = await fetch(`${process.env.API_URL}/api/course/checkout/${course._id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -51,7 +50,7 @@ export default function CoursesPage() {
             const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = response;
             try {
               // Call the payment verification API
-              const verificationResponse = await fetch(`http://localhost:5001/api/verfication/${course._id}`, {
+              const verificationResponse = await fetch(`${process.env.API_URL}/api/verfication/${course._id}`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -98,7 +97,7 @@ export default function CoursesPage() {
   const fetchCourses = async () => {
     setIsLoading(true); // Set loading state to true before fetching
     try {
-      const response = await fetch(`http://localhost:5001/api/course/?name=${searchTerm}&category=${selectedCategory}`);
+      const response = await fetch(`${process.env.API_URL}/api/course/?name=${searchTerm}&category=${selectedCategory}`);
       const data = await response.json();
       console.log(data)
       if (data && data.courses) {
@@ -156,7 +155,7 @@ export default function CoursesPage() {
               <CardContent className="relative flex-grow bg-transparent bg-gradient-to-b from-black to-gray-600 rounded-md w-full">
               <div>
                 <Image
-                          src={`http://localhost:5001/${course.image.replace('\\', '/')}`} // Correcting the image URL to start with a leading slash
+                          src={`${process.env.API_URL}/${course.image.replace('\\', '/')}`} // Correcting the image URL to start with a leading slash
                           alt={course.name}
    
                           className="absolute object-cover top-0 left-0 w-full h-full rounded-md -z-1 opacity-30"
@@ -182,7 +181,7 @@ export default function CoursesPage() {
                   content={
                     <div className="grid gap-4 py-4">
                       <Image
-                        src={`http://localhost:5001/${course.image.replace('\\', '/')}`} // Correcting the image URL to start with a leading slash
+                        src={`${process.env.API_URL}/${course.image.replace('\\', '/')}`} // Correcting the image URL to start with a leading slash
                         alt={course.name}
                         className="w-full h-auto rounded-md"
                         height={1000}

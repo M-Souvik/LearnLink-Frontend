@@ -7,13 +7,6 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast, Toaster } from 'sonner'
 import { useAuth } from '@/context/authContext'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 
 const SignUp = () => {
   const { login } = useAuth();
@@ -30,7 +23,7 @@ const SignUp = () => {
 
     try {
       console.log(userData)
-      const response = await fetch(`http://localhost:5001/api/user/register`, {
+      const response = await fetch(`${process.env.API_URL}/api/user/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

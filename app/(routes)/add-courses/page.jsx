@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { BsFilterCircle } from "react-icons/bs";
 import Dropdown from '@/components/dropdown';
 import { MdTimelapse } from "react-icons/md";
-import { Star } from 'lucide-react';
+import { FileVideo2, Star } from 'lucide-react';
 import { MdStars } from "react-icons/md";
 import { MdVideoCameraFront } from "react-icons/md";
 import { Textarea } from '@/components/ui/textarea';
@@ -46,7 +46,27 @@ export default function AddCoursesPage() {
     duration: '',
     price: ''
   });
+  const [lectureFormData, setLectureFormData] = useState({
+    title: '',
+    description: '',
+    duration: '',
+    file: null
+  });
 
+  const handleLectureFormChange = (e) => {
+    const { name, value } = e.target;
+    setLectureFormData(prevState => ({
+      ...prevState,
+      [name]: value
+    }));
+  };
+
+  const handleLectureVideoChange = (e) => {
+    setLectureFormData(prevState => ({
+      ...prevState,
+      file: e.target.files[0]
+    }));
+  };
   const handleAddCourse = (courseId) => {
     // Implement your add to cart logic here
     console.log(`Added course with ID ${courseId} to cart`);
@@ -55,7 +75,7 @@ export default function AddCoursesPage() {
   const fetchCourses = async () => {
     setIsLoading(true); // Set loading state to true before fetching
     try {
-      const response = await fetch(`http://localhost:5001/api/course/?name=${searchTerm}&category=${selectedCategory}`);
+      const response = await fetch(`${process.env.API_URL}/api/course/?name=${searchTerm}&category=${selectedCategory}`);
       const data = await response.json();
       console.log(data)
       if (data && data.courses) {
@@ -128,7 +148,7 @@ export default function AddCoursesPage() {
 
     try {
       console.log(formDataObj)
-      const response = await fetch('http://localhost:5001/api/admin/course/create', {
+      const response = await fetch(`${process.env.API_URL}/api/admin/course/create`, {
         method: 'POST',
         body: formDataObj,
         headers: {
@@ -183,7 +203,7 @@ export default function AddCoursesPage() {
     });
   
     try {
-      const response = await fetch(`http://localhost:5001/api/admin/course/edit/${courseId}`, {
+      const response = await fetch(`${process.env.API_URL}/api/admin/course/edit/${courseId}`, {
         method: 'PUT',
         body: formDataObj,
         headers: {
@@ -232,7 +252,7 @@ export default function AddCoursesPage() {
   const isFormValid = Object.values(formErrors).every(error => error === '') && Object.values(formData).every(value => value !== '');
   const handleDeleteCourse = async (courseId) => {
     try {
-      const response = await fetch(`http://localhost:5001/api/admin/course/${courseId}`, {
+      const response = await fetch(`${process.env.API_URL}/api/admin/course/${courseId}`, {
         method: 'DELETE',
         headers: {
           'token': token
@@ -249,6 +269,41 @@ export default function AddCoursesPage() {
     } catch (error) {
       console.error('Error deleting course:', error.message);
       toast.error('Failed to delete course');
+    }
+  };
+  const handleAddLectures = async (e, courseId) => {
+    e.preventDefault();
+    const formDataObj = new FormData();
+    formDataObj.append('title', lectureFormData.title);
+    formDataObj.append('description', lectureFormData.description);
+    formDataObj.append('duration', lectureFormData.duration);
+    formDataObj.append('file', lectureFormData.file);
+
+    try {
+      const response = await fetch(`${process.env.API_URL}/api/admin/course/${courseId}`, {
+        method: 'POST',
+        body: formDataObj,
+        headers: {
+          'token': token
+        }
+      });
+      const data = await response.json();
+      if (response.ok) {
+        toast.success('Lecture added successfully');
+        // Reset lecture form data
+        setLectureFormData({
+          title: '',
+          description: '',
+          duration: '',
+          file: null
+        });
+        await fetchCourses(); // Refresh the course list to show updated lecture count
+      } else {
+        throw new Error(data.message || 'Failed to add lecture');
+      }
+    } catch (error) {
+      console.error('Error adding lecture:', error.message);
+      toast.error('Failed to add lecture');
     }
   };
 
@@ -360,18 +415,19 @@ export default function AddCoursesPage() {
               <CardContent className="relative flex-grow bg-transparent bg-gradient-to-b from-black to-gray-600 rounded-md w-full">
               <div>
                 <Image
-                          src={`http://localhost:5001/${course.image.replace('\\', '/')}`} // Correcting the file URL to start with a leading slash
+                          src={`${process.env.API_URL}/${course.image.replace('\\', '/')}`} // Correcting the file URL to start with a leading slash
                           alt={course.name}
    
                           className="absolute object-cover top-0 left-0 w-full h-full rounded-md -z-1 opacity-30 hover:opacity-15 transition-opacity duration-300"
                           width={1000}
                           height={1000}
                         />
-              <div className="absolute flex flex-col   z-100 translate-y-4 right-2">
+              <div className="absolute flex flex-col z-100 translate-y-4 right-2">
                 <Modal
                   trigger={<Button className=" mb-1 p-0 bg-transparent border-none hover:text-yellow-500 rounded-full hover:bg-transparent" onClick={() => setFormData(course)}><MdUpdate size={30} className='bg-yellow-700 rounded-full'/></Button>}
                   title="Update Course"
                   description={<></>}
+
                   content={
                     <form onSubmit={(e)=>handleEditForm(e, course._id)} className="grid gap-4 py-4">
                       <Input 
@@ -446,7 +502,7 @@ export default function AddCoursesPage() {
                           </Button>
                           <Button 
                             className="bg-red-500 text-white hover:bg-red-600"
-                            onClick={() => handleDeleteCourse(course._id)}  // Call delete function
+                            onClick={() => handleDeleteCourse(course._id)}
                           >
                             <RiDeleteBinLine size={20} />Remove
                           </Button>
@@ -454,7 +510,7 @@ export default function AddCoursesPage() {
                       }
                     />
                 </div>
-                <div className='absolute w-72 flex justify-center flex-col top-32 z-100 p-1'>
+                <div className='absolute w-72 flex justify-center flex-col top-32 z-100 p-1 bottom-1'>
                 <div className="flex justify-between items-center uppercase text-md font-semibold"><span className=''>{course.name}</span> <span className='rounded-full text-xs px-2 text-blue-200 bg-blue-600 text-nowrap'>{course.category}</span> </div>
                 <div className="flex justify-between items-center">
                 <span className='flex justify-start items-center text-green-400 font-bold gap-1'><MdTimelapse />{course.duration}min</span>
@@ -462,13 +518,62 @@ export default function AddCoursesPage() {
                 </div>
                 <div className="flex justify-between items-center text-lg bg-gray-400 text-gray-700 rounded-full w-full font-bold px-3 my-2">
                 ₹{course.price.toFixed(2)}
-                  <div className='flex items-center gap-1'><MdStars /> 4</div>
+                  <div className='flex items-center gap-1'><MdStars className=' text-yellow-500'/> 4</div>
                   
 
                 </div>
-                
+                {/* //add lectures */}
+                <Modal
+                  trigger={<Button onClick={() => setLectureFormData({ title: '', description: '', duration: '', file: null })} className="bg-green-700 border hover:bg-green-600"><FileVideo2 size={20} /> Add Lectures</Button>}
+                  title="Add Lectures"
+                  description={<></>}
+                  content={
+                    <form onSubmit={(e) => handleAddLectures(e, course._id)} className="grid gap-4 py-4">
+                      <Input 
+                        type="text" 
+                        placeholder="Lecture Title" 
+                        name="title" 
+                        value={lectureFormData.title} 
+                        onChange={handleLectureFormChange}
+                        className="w-full"
+                        required
+                      />
+                      <Textarea
+                        placeholder="Lecture Description" 
+                        name="description" 
+                        value={lectureFormData.description} 
+                        onChange={handleLectureFormChange}
+                        className="w-full"
+                        required
+                      />
+                      <Input 
+                        type="text" 
+                        placeholder="Duration (in minutes)" 
+                        name="duration" 
+                        value={lectureFormData.duration} 
+                        onChange={handleLectureFormChange}
+                        className="w-full"
+                        required
+                      />
+                      <input 
+                        type="file" 
+                        name="file" 
+                        onChange={handleLectureVideoChange}
+                        className="w-full"
+                        required
+                      />
+                      <Button 
+                        type="submit" 
+                        className="mt-4"
+                      >
+                        Add Lecture
+                      </Button>
+                    </form>
+                  }
+                />
                 </div>
                 </div>
+               
               </CardContent>
             </Card>
                 {/* Update Modal */}

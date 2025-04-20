@@ -15,9 +15,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import "@/styles/sign-in.css"; // Import the CSS file
+import { Input } from '@/components/ui/input';
 
 export default function SignIn() {
-  const { login } = useAuth();
+  // const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('user');
@@ -30,7 +31,7 @@ export default function SignIn() {
     const userData = { email, password, role };
 
     try {
-      const response = await fetch(`http://localhost:5001/api/user/login`, {
+      const response = await fetch(`${process.env.API_URL}/api/user/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -40,8 +41,12 @@ export default function SignIn() {
       });
 
       const data = await response.json();
+      console.log(data);
       if (response.ok) {
-        login(data);
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem('token', data.token);
+          sessionStorage.setItem('authUser', JSON.stringify(data.user));
+        }
         if (data.user.role === 'admin') {
           router.push('/admin-dashboard');
         } else {
@@ -55,7 +60,7 @@ export default function SignIn() {
       toast("An error occurred during sign in");
     }
   };
-
+// console.log(process.env.API_URL)
   return (
     <div className='sign-in-container'>
       <div className="form-container">
@@ -68,7 +73,7 @@ export default function SignIn() {
           <form onSubmit={handleSignIn}>
             <div className="form-group">
               <label htmlFor="email">Email</label>
-              <input
+              <Input
                 id="email"
                 type="email"
                 value={email}
@@ -82,7 +87,7 @@ export default function SignIn() {
                 <label htmlFor="password">Password</label>
                 <a href="#" className="forgot-password">Forgot Password?</a>
               </div>
-              <input
+              <Input
                 id="password"
                 type="password"
                 value={password}
@@ -112,7 +117,7 @@ export default function SignIn() {
           </form>
 
           <div className="sign-up-text">
-            <p>Don't have an account?{' '}
+            <p>Don{`'`}t have an account?
               <Link href="/sign-up" className="sign-up-link">Sign Up</Link>
             </p>
           </div>
