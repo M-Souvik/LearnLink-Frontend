@@ -21,7 +21,7 @@ const Nav = ({ toggleSidebar }) => {
       const storedToken = sessionStorage.getItem('token')
       setToken(storedToken)
     }
-  }, [])
+  }, [token , setToken])
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-transparent backdrop-blur-md z-50 border-b-2 border-b-purple-600 dark:bg-gray-900">

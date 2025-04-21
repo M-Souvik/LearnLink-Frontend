@@ -23,13 +23,13 @@ const SignUp = () => {
 
     try {
       console.log(userData)
-      const response = await fetch(`${process.env.API_URL}/api/user/register`, {
+      const response = await fetch(`${process.env.NEXT_API_URL}/api/user/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(userData),
-        credentials: 'include',
+        // credentials: 'include',
       });
       
       const data = await response.json();

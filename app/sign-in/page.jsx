@@ -31,13 +31,13 @@ export default function SignIn() {
     const userData = { email, password, role };
 
     try {
-      const response = await fetch(`${process.env.API_URL}/api/user/login`, {
+      const response = await fetch(`${process.env.NEXT_API_URL}/api/user/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(userData),
-        credentials: 'include',
+        // credentials: 'include',
       });
 
       const data = await response.json();
@@ -60,7 +60,7 @@ export default function SignIn() {
       toast("An error occurred during sign in");
     }
   };
-// console.log(process.env.API_URL)
+// console.log(process.env.NEXT_API_URL)
   return (
     <div className='sign-in-container'>
       <div className="form-container">

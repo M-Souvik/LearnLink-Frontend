@@ -35,7 +35,7 @@ export default function MyCoursesPage() {
   const fetchCourses = async () => {
     setIsLoading(true); // Set loading state to true before fetching
     try {
-      const response = await fetch(`${process.env.API_URL}/api/mycourse`,{
+      const response = await fetch(`${process.env.NEXT_API_URL}/api/mycourse`,{
         method: 'GET',
         headers:{
           'token': token

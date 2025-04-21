@@ -75,7 +75,7 @@ export default function AddCoursesPage() {
   const fetchCourses = async () => {
     setIsLoading(true); // Set loading state to true before fetching
     try {
-      const response = await fetch(`${process.env.API_URL}/api/course/?name=${searchTerm}&category=${selectedCategory}`);
+      const response = await fetch(`${process.env.NEXT_API_URL}/api/course/?name=${searchTerm}&category=${selectedCategory}`);
       const data = await response.json();
       console.log(data)
       if (data && data.courses) {
@@ -148,7 +148,7 @@ export default function AddCoursesPage() {
 
     try {
       console.log(formDataObj)
-      const response = await fetch(`${process.env.API_URL}/api/admin/course/create`, {
+      const response = await fetch(`${process.env.NEXT_API_URL}/api/admin/course/create`, {
         method: 'POST',
         body: formDataObj,
         headers: {
@@ -203,7 +203,7 @@ export default function AddCoursesPage() {
     });
   
     try {
-      const response = await fetch(`${process.env.API_URL}/api/admin/course/edit/${courseId}`, {
+      const response = await fetch(`${process.env.NEXT_API_URL}/api/admin/course/edit/${courseId}`, {
         method: 'PUT',
         body: formDataObj,
         headers: {
@@ -252,7 +252,7 @@ export default function AddCoursesPage() {
   const isFormValid = Object.values(formErrors).every(error => error === '') && Object.values(formData).every(value => value !== '');
   const handleDeleteCourse = async (courseId) => {
     try {
-      const response = await fetch(`${process.env.API_URL}/api/admin/course/${courseId}`, {
+      const response = await fetch(`${process.env.NEXT_API_URL}/api/admin/course/${courseId}`, {
         method: 'DELETE',
         headers: {
           'token': token
@@ -280,7 +280,7 @@ export default function AddCoursesPage() {
     formDataObj.append('file', lectureFormData.file);
 
     try {
-      const response = await fetch(`${process.env.API_URL}/api/admin/course/${courseId}`, {
+      const response = await fetch(`${process.env.NEXT_API_URL}/api/admin/course/${courseId}`, {
         method: 'POST',
         body: formDataObj,
         headers: {
@@ -415,7 +415,7 @@ export default function AddCoursesPage() {
               <CardContent className="relative flex-grow bg-transparent bg-gradient-to-b from-black to-gray-600 rounded-md w-full">
               <div>
                 <Image
-                          src={`${process.env.API_URL}/${course.image.replace('\\', '/')}`} // Correcting the file URL to start with a leading slash
+                          src={`${process.env.NEXT_API_URL}/${course.image.replace('\\', '/')}`} // Correcting the file URL to start with a leading slash
                           alt={course.name}
    
                           className="absolute object-cover top-0 left-0 w-full h-full rounded-md -z-1 opacity-30 hover:opacity-15 transition-opacity duration-300"
